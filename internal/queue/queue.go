@@ -495,8 +495,8 @@ func (q *Queue) String() string {
 // DefaultRetryFunc is the default function used for retries by the queue subsystem.
 func DefaultRetryFunc(ctx context.Context, key string, timesTried int, originallyAdded time.Time, err error) (*time.Duration, error) {
 	if timesTried < MaxRetries {
-		return nil, nil
+		delay := time.Second * time.Duration(timesTried)
+		return &delay, nil
 	}
-
 	return nil, pkgerrors.Wrapf(err, "maximum retries (%d) reached", MaxRetries)
 }
